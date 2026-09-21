@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Sign in — Personal Bot</title>
+<style>
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background:#0d0d0d; color:#fff; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; }
+  form { background:#1a1a19; padding:32px; border-radius:12px; width:280px; border:1px solid rgba(255,255,255,0.1); }
+  h1 { font-size:16px; margin:0 0 20px; font-weight:600; }
+  label { display:block; font-size:12.5px; margin-bottom:6px; color:#c3c2b7; }
+  input { width:100%; padding:8px 10px; margin-bottom:14px; border-radius:6px; border:1px solid rgba(255,255,255,0.15); background:#0d0d0d; color:#fff; box-sizing:border-box; font-size:14px; }
+  button { width:100%; padding:10px; border-radius:6px; border:none; background:#2a78d6; color:#fff; font-weight:600; cursor:pointer; font-size:14px; }
+  .error { color:#e34948; font-size:13px; margin-bottom:12px; display:none; }
+</style>
+</head>
+<body>
+<form method="POST" action="/api/login">
+  <h1>Personal Bot — Sign in</h1>
+  <div class="error" id="err">Wrong username or password.</div>
+  <label>Username<input type="text" name="username" autocomplete="username" autofocus required /></label>
+  <label>Password<input type="password" name="password" autocomplete="current-password" required /></label>
+  <button type="submit">Sign in</button>
+</form>
+<script>
+  if (new URLSearchParams(location.search).get("error")) {
+    document.getElementById("err").style.display = "block";
+  }
+</script>
+</body>
+</html>
