@@ -2,7 +2,12 @@
   "name": "personal-bot",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "db:check": "node db/check.js"
+  },
   "dependencies": {
-    "@anthropic-ai/sdk": "latest"
+    "@anthropic-ai/sdk": "latest",
+    "dotenv": "^18.0.4",
+    "pg": "^8.23.0"
   }
 }

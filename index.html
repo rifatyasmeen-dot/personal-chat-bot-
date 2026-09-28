@@ -45,6 +45,7 @@
   const inputEl = document.getElementById("input");
   const sendBtn = document.getElementById("sendBtn");
   const messages = [];
+  let conversationId = localStorage.getItem("conversation_id") || null;
 
   function addBubble(role, text, extraClass) {
     const div = document.createElement("div");
@@ -53,6 +54,20 @@
     chatEl.appendChild(div);
     chatEl.scrollTop = chatEl.scrollHeight;
     return div;
+  }
+
+  async function restoreHistory() {
+    if (!conversationId) return;
+    try {
+      const res = await fetch("/api/history?conversation_id=" + encodeURIComponent(conversationId));
+      const data = await res.json();
+      for (const m of data.messages || []) {
+        messages.push({ role: m.role, content: m.content });
+        addBubble(m.role, m.content);
+      }
+    } catch (err) {
+      console.error("Could not restore history:", err);
+    }
   }
 
   formEl.addEventListener("submit", async (e) => {
@@ -70,9 +85,13 @@
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages }),
+        body: JSON.stringify({ messages, conversation_id: conversationId }),
       });
       const data = await res.json();
+      if (data.conversation_id) {
+        conversationId = data.conversation_id;
+        localStorage.setItem("conversation_id", conversationId);
+      }
       if (!res.ok) throw new Error(data.error || "Request failed");
       pending.textContent = data.reply;
       pending.classList.remove("pending");
@@ -87,6 +106,8 @@
       inputEl.focus();
     }
   });
+
+  restoreHistory();
 </script>
 </body>
 </html>
